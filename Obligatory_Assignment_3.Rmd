@@ -1,0 +1,36 @@
+---
+title: "Obligatory Assignment 3"
+author: "Even Grindstad Brovold"
+date: "25 september 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+
+```
+
+## Loading data with read_delim function.
+
+```{r}
+per_fylke <- read_delim("http://data.ssb.no/api/v0/dataset/95274.csv?lang=no", 
+    ";", escape_double = FALSE, trim_ws = TRUE)
+
+hele_landet <- read_delim("http://data.ssb.no/api/v0/dataset/95293.csv?lang=no", 
+    ";", escape_double = FALSE, col_names = FALSE, 
+    trim_ws = TRUE)
+```
+
+### Cleaning data, beginning with hele_landet
+
+```{r}
+names(hele_landet) <- c("region", "stays_purpose", "date", "statistical value", "total_stays")
+
+hele_landet <- hele_landet[-1,]
+
+```
+
+
+
+
