@@ -8,6 +8,10 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(readr)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
 
 ```
 
@@ -22,15 +26,41 @@ hele_landet <- read_delim("http://data.ssb.no/api/v0/dataset/95293.csv?lang=no",
     trim_ws = TRUE)
 ```
 
-### Cleaning data, beginning with hele_landet
+### Cleaning data, beginning with hele_landet. 
 
-```{r}
-names(hele_landet) <- c("region", "stays_purpose", "date", "statistical value", "total_stays")
+```{r, fig.width=10, fig.height=5}
+names(hele_landet) <- c("region", "stays_purpose", "date", "statistical_value", "total_stays")
 
 hele_landet <- hele_landet[-1,]
 
+
+hele_landetSep <- separate(hele_landet, date, c("year", "month"), sep = "M")
+
+hele_landetSep$date <- paste(hele_landetSep$year, hele_landetSep$month)
+
+hele_landetSep2 <- hele_landetSep %>%
+  filter(statistical_value == "Overnattingar")
+  
+totalt_overnattinger <- hele_landetSep2 %>%
+ filter(stays_purpose == "00 Overnattinger i alt")
+
 ```
 
+##Total stays during a year in Norway, divided in to months. 
+The table shows us how the stays are divided between the 12 months, during a year, for the period between 1986 and 2018. The month with the highest amount of stays during the period of 1986 and 2017(2017 because we are not in december in 2018 yet) is december. 
 
+```{r}
 
+ggplot(totalt_overnattinger, aes(x = month, y = total_stays))+
+  geom_col()
+   
+```
+
+```{r}
+
+overnattinger_totalt_des <- totalt_overnattinger %>% 
+  filter(month ==12)
+  
+
+```
 
